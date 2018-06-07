@@ -1,0 +1,68 @@
+<html>
+
+	<head>
+
+		<title>
+
+			Battle WIN
+
+		</title>
+
+		<script src="https://simplycodingcourses.com/files/simplyjs/simply.js">
+
+		</script>
+
+		<script>
+
+		function battle(){
+
+			sjs.open("screen",1300,675);
+
+			//background
+
+			var background = new sjs.Image("Images/background3.jpg");
+
+			background.setSize(1300,675);
+
+			
+			var gameover = new sjs.Text("YOU WON",30,"green");
+
+			gameover.center();
+			
+			var button = new sjs.Button("Play Again",function(){
+
+				window.location = "battle.html";
+
+			});
+
+			button.bottom().centerH();
+
+			var score_text = new sjs.Text("Score: 0",30,"green");
+
+				score_text.setText("Score: "+localStorage.getItem("score"));
+
+		}
+
+		</script>
+
+	</head>
+
+	<body onload="battle()">
+
+		<h1>
+
+			<center>
+
+				Battle WIN
+
+			</center>
+
+		</h1>
+
+		<div id="screen" style="margin:auto;background:grey;">
+
+		</div>
+
+	</body>
+
+</html>

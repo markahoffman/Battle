@@ -1,0 +1,335 @@
+<html>
+
+	<head>
+
+		<title>
+
+			Battle
+
+		</title>
+
+		<script src="https://simplycodingcourses.com/files/simplyjs/simply.js">
+
+		</script>
+
+		<script>
+
+		function battle(){
+
+			sjs.open("screen",1300,675);
+
+			//background
+
+			var background = new sjs.Image("Images/background3.jpg");
+
+			background.setSize(1300,675);
+
+			
+
+			//gun tower
+
+			var gun1 = new sjs.Image("Images/gunf.jpg");
+
+			gun1.type = "gun1";
+
+			gun1.setSize(240,230);
+
+			gun1.noBounds = true;
+
+			gun1.moveTo(550,548);
+
+			var gun2 = new sjs.Image("Images/gunf.jpg");
+
+			gun2.type = "gun2";
+
+			gun2.moveTo(-50,548);
+
+			gun2.setSize(240,230);
+
+			gun2.noBounds = true;
+
+			var gun3 = new sjs.Image("Images/gunf.jpg");
+
+			gun3.type = "gun3";
+
+			gun3.setSize(240,230);
+
+			gun3.moveTo(1110,548);
+
+			gun3.noBounds = true;
+
+			//player
+
+			var player = new sjs.Image("Images/bb8.jpg");
+
+			player.type = "player";
+
+			player.setSize(50,80);
+
+			player.bottom().centerH();
+
+			sjs.keyDown(RIGHT_KEY, function(){
+
+				player.setImage("Images/forward bb8.png");
+
+				player.pushRight(3);
+
+				player.friction = .3;
+
+			});
+
+			sjs.keyDown(LEFT_KEY,function(){
+
+				player.setImage("Images/backward bb8.png");
+
+				player.pushLeft(3);
+
+				player.friction = .3;
+
+			});
+
+			//fiter enemy
+
+			setInterval(function(){
+
+					var speed = Math.floor(1 + Math.random()*2); 
+
+					if(Math.random() > 0.5){
+
+						var enemy1 = new sjs.Image("Images/dfiter.png");
+
+						enemy1.type = "enemy1";
+
+						enemy1.setSize(100,50);
+
+						enemy1.noBounds = true;
+
+						enemy1.friction = 0; 
+
+						enemy1.pushDown(speed); 
+
+						enemy1.scaleSize(.8 + Math.random() * 1.5);
+
+						enemy1.left();
+
+						
+
+						
+						} 
+
+					
+			
+
+					
+
+					
+					sjs.top_screen.offset(-500); 
+
+					
+
+				},6000); //setInterval
+
+			setInterval(function(){
+
+					var speed = Math.floor(1 + Math.random()*2); 
+
+					if(Math.random() > 0.5){
+
+						var enemy2 = new sjs.Image("Images/dfiter.png");
+
+						enemy2.type = "enemy2";
+
+						enemy2.setSize(100,50);
+
+						enemy2.noBounds = true;
+
+						enemy2.friction = 0; 
+
+						enemy2.pushDown(speed); 
+
+						enemy2.scaleSize(.8 + Math.random() * 1.5);
+
+						enemy2.centerH();
+
+						
+						
+						} 
+
+					
+			
+
+					
+
+					
+					sjs.top_screen.offset(-500); 
+
+					
+
+				},3000); //setInterval
+
+			setInterval(function(){
+
+					var speed = Math.floor(1 + Math.random()*2); 
+
+					if(Math.random() > 0.5){
+
+						var enemy3 = new sjs.Image("Images/dfiter.png");
+
+						enemy3.type = "enemy3";
+
+						enemy3.setSize(100,50);
+
+						enemy3.noBounds = true;
+
+						enemy3.friction = 0; 
+
+						enemy3.pushDown(speed); 
+
+						enemy3.scaleSize(.8 + Math.random() * 1.5);
+
+						enemy3.right();
+
+						
+						} 
+
+					sjs.top_screen.offset(-500); 
+
+					
+
+				},6000);//end setInterval
+
+			//onhits
+
+			sjs.onHit(["enemy1","enemy2","enemy3"],"bottom_screen",function(x,y){
+
+				x.destroy();
+
+				window.location = "gameover.html";
+
+			});
+
+			sjs.onHit(["enemy1","enemy2","enemy3"],"laser",function(x,y){
+
+				x.destroy();
+
+				y.destroy();
+
+			});
+
+			var score = 0;
+
+			var score_txt = new sjs.Text("Score: 0",40, "green");
+
+			score_txt.moveTo(550,0);
+
+			score_txt.fixed = true;
+
+			sjs.onHit("laser",["enemy1","enemy2","enemy3"], function(x,y){
+
+				score = score + 1;
+
+				score_txt.setText("Score :"+ score);
+
+				localStorage.setItem("score",score);
+
+				y.destroy();
+
+				if(score>=10){
+
+						sjs.destroyAll("enemy1","enemy2","enemy3");
+
+						window.location = "battle2.html";
+					}
+
+			});	
+
+			sjs.onHit(["gun2","gun1","gun3"],"player",function(){
+
+				canShoot = true;
+
+			});
+
+
+			
+ 
+               var activeGun;
+ 
+               sjs.onHit(["gun2","gun1","gun3"],"player",function(gun){
+ 
+                    if(activeGun !== gun) {
+ 
+                      activeGun = gun;
+ 
+                    }
+ 
+               });
+
+              
+ 
+               setInterval(function(){
+ 
+                     canShoot = true;
+ 
+               },1000);
+ 
+               sjs.keyDown(DOWN_KEY, function(){
+
+               	    if(canShoot == true && sjs.testCollision(activeGun, player)){ 
+ 
+                    if(canShoot == true){
+ 
+                         canShoot = false;
+ 
+                         var laser = new sjs.Image("Images/laser1.png");
+
+                         soundEffect.play();
+ 
+                         laser.type = "laser";
+ 
+                         laser.setSize(50,100);
+ 
+                         laser.friction = 0;
+ 
+                         laser.noBounds = true;
+ 
+                         laser.centerAt(activeGun.getCenter().x, activeGun.getY());
+ 
+                         laser.pushUp(25.5);
+ 
+                    }
+ 
+ 					}
+               });
+
+               alert("You Are BB8 Use The Arrow Keys To Move! Go To A Gun To Shoot! Don't Let The Ships Get To The Bottom Of The Screen! Press The Down Key To Shoot! CLICK OK WHEN READY TO START THE GAME!");
+
+               var soundEffect = new Audio('Images/LaserSound.mp3'); 
+           
+
+			
+
+		}
+
+		</script>
+
+	</head>
+
+	<body onload="battle()">
+
+		<h1>
+
+			<center>
+
+				Battle
+
+			</center>
+
+		</h1>
+
+		<div id="screen" style="margin:auto;background:grey;">
+
+		</div>
+
+	</body>
+
+</html>
